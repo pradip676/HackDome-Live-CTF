@@ -20,7 +20,7 @@ get_header();
 
             <p class="terminal-text">[+] Please complete your payment to activate your HackDome access.</p>
 
-            <!-- Stripe Payment Integration -->
+            <!-- ✅ Stripe Payment Integration -->
             <div class="payment-section">
                 <?php 
                 echo do_shortcode('[accept_stripe_payment 
@@ -29,27 +29,21 @@ get_header();
                     currency="USD" 
                     description="Monthly HackDome Subscription" 
                     button_text="Complete Payment" 
-                    success_url="' . home_url('/profile') . '" 
-                    cancel_url="' . home_url('/payment?payment=cancel') . '"
+                    success_url="' . home_url('/payment-success') . '" 
+                    cancel_url="' . home_url('/payment-failed') . '"
                     class="custom-stripe-button"]'); 
                 ?>
             </div>
 
         <?php else : ?>
             <p class="terminal-text error">
-                <i class="fa fa-times-circle"></i> You must be logged in to complete payment. <a href="<?php echo wp_login_url(home_url('/payment')); ?>">Log in here</a>.
+                <i class="fa fa-times-circle"></i> You must be logged in to complete payment. 
+                <a href="<?php echo wp_login_url(home_url('/payment')); ?>">Log in here</a>.
             </p>
         <?php endif; ?>
 
     </div>
 </div>
-
-<!-- Payment Cancel Notification -->
-<?php if (isset($_GET['payment']) && $_GET['payment'] == 'cancel') : ?>
-    <div class="payment-error">
-        <p class="terminal-text error"><i class="fa fa-times-circle"></i> Payment was cancelled. Please try again or <a href="<?php echo home_url('/'); ?>">return home</a>.</p>
-    </div>
-<?php endif; ?>
 
 <!-- Scripts -->
 <script src="<?php echo get_template_directory_uri(); ?>/vendor/jquery/jquery.min.js"></script>
