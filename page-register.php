@@ -140,8 +140,6 @@ get_header();
         </form>
 
         <?php
-        echo '<p style="color:lime;">✅ Form Submitted</p>'; // Debug
-
         if (isset($_POST['submit_registration'])) {
             $username = sanitize_user($_POST['username']);
             $email    = sanitize_email($_POST['email']);
@@ -155,7 +153,7 @@ get_header();
                 if (!is_wp_error($user_id)) {
                     wp_set_current_user($user_id);
                     wp_set_auth_cookie($user_id);
-                    wp_redirect(home_url('/payment'));
+                    echo '<script>window.location.href = "' . home_url('/payment') . '";</script>';
                     exit;
                 } else {
                     echo '<p class="error"><i class="fa fa-exclamation-circle"></i> Error creating account. Please try again.</p>';
