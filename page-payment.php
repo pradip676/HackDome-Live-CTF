@@ -29,7 +29,7 @@ get_header();
                     currency="USD" 
                     description="Monthly HackDome Subscription" 
                     button_text="Complete Payment" 
-                    success_url="' . home_url('/payment?payment=success') . '" 
+                    success_url="' . home_url('/profile') . '" 
                     cancel_url="' . home_url('/payment?payment=cancel') . '"
                     class="custom-stripe-button"]'); 
                 ?>
@@ -44,17 +44,8 @@ get_header();
     </div>
 </div>
 
-<!-- Success & Failure Notifications -->
-<?php if (isset($_GET['payment']) && $_GET['payment'] == 'success') : ?>
-    <div class="payment-success">
-        <p class="terminal-text success"><i class="fa fa-check-circle"></i> Payment completed successfully! Redirecting to leaderboard...</p>
-        <script>
-            setTimeout(function () {
-                window.location.href = "<?php echo home_url('/leaderboard'); ?>"; // ✅ Redirect to leaderboard after payment
-            }, 3000);
-        </script>
-    </div>
-<?php elseif (isset($_GET['payment']) && $_GET['payment'] == 'cancel') : ?>
+<!-- Payment Cancel Notification -->
+<?php if (isset($_GET['payment']) && $_GET['payment'] == 'cancel') : ?>
     <div class="payment-error">
         <p class="terminal-text error"><i class="fa fa-times-circle"></i> Payment was cancelled. Please try again or <a href="<?php echo home_url('/'); ?>">return home</a>.</p>
     </div>
