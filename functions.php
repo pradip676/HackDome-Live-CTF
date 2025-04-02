@@ -129,21 +129,9 @@ add_filter('login_redirect', function($redirect_to, $request, $user) {
     return $redirect_to;
 }, 10, 3);
 
-// ✅ -- After Payment Redirect Hook (WooCommerce Fallback)
-add_action('woocommerce_thankyou', 'hackdome_redirect_after_payment');
-function hackdome_redirect_after_payment($order_id) {
-    $order = wc_get_order($order_id);
-    foreach ($order->get_items() as $item) {
-        if ($item->get_product_id() == 123) {
-            wp_safe_redirect(home_url('/payment-success'));
-            exit;
-        }
-    }
-}
-
-// ✅ -- Handle Stripe Payment Success via Accept Stripe Plugin
+// ✅ -- Stripe Payment Success Logic (Set flag and redirect to /profile)
 add_action('init', function () {
-    if (is_user_logged_in() && isset($_GET['payment']) && $_GET['payment'] == 'success') {
+    if (is_user_logged_in() && isset($_GET['payment']) && $_GET['payment'] === 'success') {
         $user_id = get_current_user_id();
         update_user_meta($user_id, 'has_paid', true);
         wp_redirect(home_url('/profile'));
