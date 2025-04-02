@@ -3,7 +3,116 @@
 get_header();
 ?>
 
-<!-- (💅 Style remains unchanged — skipping here for brevity) -->
+<style>
+    .register-container {
+        max-width: 500px;
+        margin: 80px auto;
+        background: #1f1f1f;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+        font-family: 'Poppins', sans-serif;
+        color: #fff;
+    }
+    .register-container h2 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        text-align: center;
+        color: #fff;
+    }
+    .register-container p.subtext {
+        text-align: center;
+        color: #ccc;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    .register-container label {
+        font-weight: 500;
+        margin-top: 15px;
+        display: block;
+        color: #eee;
+    }
+    .register-container input[type="text"],
+    .register-container input[type="email"],
+    .register-container input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        border: 1px solid #444;
+        border-radius: 5px;
+        background: #2b2b2b;
+        color: #fff;
+    }
+    .register-container .password-container {
+        position: relative;
+    }
+    .register-container .toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #aaa;
+    }
+    .register-container .error {
+        color: #ff4c4c;
+        font-weight: 500;
+        margin-top: 10px;
+    }
+    .main-button-login, .google-btn, .sso-btn {
+        margin-top: 20px;
+        width: 100%;
+        padding: 12px;
+        font-weight: bold;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+    }
+    .main-button-login {
+        background: #ff4c9b;
+        border: none;
+        color: white;
+    }
+    .google-btn {
+        background: white;
+        color: #444;
+        border: 1px solid #ccc;
+    }
+    .register-container .separator {
+        text-align: center;
+        margin: 20px 0;
+        color: #666;
+        position: relative;
+    }
+    .register-container .separator::before,
+    .register-container .separator::after {
+        content: "";
+        height: 1px;
+        width: 45%;
+        background: #333;
+        position: absolute;
+        top: 50%;
+    }
+    .register-container .separator::before {
+        left: 0;
+    }
+    .register-container .separator::after {
+        right: 0;
+    }
+    .register-container .bottom-text {
+        text-align: center;
+        font-size: 12px;
+        margin-top: 20px;
+        color: #ccc;
+    }
+    .register-container .bottom-text a {
+        color: #ff4c9b;
+        text-decoration: underline;
+    }
+</style>
 
 <div class="register-container">
     <h2>Sign Up</h2>
@@ -27,15 +136,12 @@ get_header();
                 </span>
             </div>
 
-            <!-- reCAPTCHA placeholder -->
-            <div style="margin-top: 20px;">
-                <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
-            </div>
-
             <button type="submit" name="submit_registration" class="main-button-login">Sign Up</button>
         </form>
 
         <?php
+        echo '<p style="color:lime;">✅ Form Submitted</p>'; // Debug
+
         if (isset($_POST['submit_registration'])) {
             $username = sanitize_user($_POST['username']);
             $email    = sanitize_email($_POST['email']);
@@ -49,7 +155,7 @@ get_header();
                 if (!is_wp_error($user_id)) {
                     wp_set_current_user($user_id);
                     wp_set_auth_cookie($user_id);
-                    wp_redirect(home_url('/payment')); // ✅ Redirect after signup
+                    wp_redirect(home_url('/payment'));
                     exit;
                 } else {
                     echo '<p class="error"><i class="fa fa-exclamation-circle"></i> Error creating account. Please try again.</p>';
@@ -61,7 +167,6 @@ get_header();
         <div class="separator">or</div>
 
         <a href="#" class="google-btn"><i class="fab fa-google"></i> Continue with Google</a>
-        <a href="#" class="sso-btn"><i class="fa fa-key"></i> Continue with SSO</a>
     <?php endif; ?>
 
     <div class="bottom-text">
@@ -69,7 +174,6 @@ get_header();
     </div>
 </div>
 
-<script src='https://www.google.com/recaptcha/api.js'></script>
 <script>
     function togglePasswordVisibility() {
         const passwordField = document.getElementById('password');
