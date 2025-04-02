@@ -59,7 +59,7 @@ get_header();
         font-weight: 500;
         margin-top: 10px;
     }
-    .main-button-login, .google-btn, .sso-btn {
+    .main-button-login, .google-btn {
         margin-top: 20px;
         width: 100%;
         padding: 12px;
@@ -151,9 +151,9 @@ get_header();
                 $user_id = wp_create_user($username, $password, $email);
 
                 if (!is_wp_error($user_id)) {
-                    wp_set_current_user($user_id);
-                    wp_set_auth_cookie($user_id);
-                    echo '<script>window.location.href = "' . home_url('/payment') . '";</script>';
+                    // 👇 Redirect to login so miniOrange 2FA can kick in
+                    $login_url = wp_login_url(home_url('/payment'));
+                    echo '<script>window.location.href = "' . $login_url . '";</script>';
                     exit;
                 } else {
                     echo '<p class="error"><i class="fa fa-exclamation-circle"></i> Error creating account. Please try again.</p>';
@@ -163,7 +163,6 @@ get_header();
         ?>
 
         <div class="separator">or</div>
-
         <a href="#" class="google-btn"><i class="fab fa-google"></i> Continue with Google</a>
     <?php endif; ?>
 
@@ -176,7 +175,6 @@ get_header();
     function togglePasswordVisibility() {
         const passwordField = document.getElementById('password');
         const toggleIcon = document.getElementById('toggleIcon');
-
         if (passwordField.type === 'password') {
             passwordField.type = 'text';
             toggleIcon.classList.remove('fa-eye');
