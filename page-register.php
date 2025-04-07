@@ -151,13 +151,12 @@ get_header();
                 $user_id = wp_create_user($username, $password, $email);
 
                 if (!is_wp_error($user_id)) {
-                    // 👇 Redirect to login so miniOrange 2FA can kick in
-                    $login_url = wp_login_url(home_url('/payment'));
-                    echo '<script>window.location.href = "' . $login_url . '";</script>';
+                    // ✅ Redirect to /payment after successful registration
+                    echo '<script>window.location.href = "' . home_url('/payment') . '";</script>';
                     exit;
                 } else {
                     echo '<p class="error"><i class="fa fa-exclamation-circle"></i> Error creating account. Please try again.</p>';
-                }
+                }                
             }
         }
         ?>
