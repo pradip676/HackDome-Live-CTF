@@ -2,20 +2,45 @@
 /* Template Name: Payment Success */
 session_start();
 
-if (!is_user_logged_in() && isset($_GET['email'])) {
-    $email = sanitize_email($_GET['email']);
-    $user = get_user_by('email', $email);
+echo '<div style="color: yellow; background: black; padding: 10px; font-family: monospace;">';
 
+if (isset($_GET['email'])) {
+    $email = sanitize_email($_GET['email']);
+    echo "✅ Email param received: $email<br>";
+
+    $user = get_user_by('email', $email);
     if ($user) {
-        wp_clear_auth_cookie(); // Reset old session
+        echo "✅ User found: {$user->user_login}<br>";
+
+        wp_clear_auth_cookie();
         wp_set_current_user($user->ID);
-        wp_set_auth_cookie($user->ID, true); // Login w/ remember
-        $_SESSION['logged_in'] = true; // ✅ Session fallback
+        wp_set_auth_cookie($user->ID, true);
+
+        $_SESSION['logged_in'] = true;
+
+        echo "✅ Auth cookie set. Session logged_in = true<br>";
+    } else {
+        echo "❌ No user found with email: $email<br>";
     }
+} else {
+    echo "❌ No email param in URL<br>";
 }
+
+echo 'WordPress is_user_logged_in(): ';
+echo is_user_logged_in() ? '✅ YES' : '❌ NO';
+echo "<br>";
+
+if (isset($_SESSION['logged_in'])) {
+    echo "Session logged_in flag: " . ($_SESSION['logged_in'] ? '✅ TRUE' : '❌ FALSE');
+} else {
+    echo "Session logged_in flag: ❌ NOT SET";
+}
+
+echo '</div>';
 
 get_header();
 ?>
+
 
 
 <!-- MATRIX RAIN BACKGROUND -->
