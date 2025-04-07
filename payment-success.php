@@ -2,7 +2,7 @@
 /* Template Name: Payment Success */
 session_start();
 
-if (!is_user_logged_in() && isset($_GET['email'])) {
+if (isset($_GET['email'])) {
     $email = sanitize_email($_GET['email']);
     $user = get_user_by('email', $email);
 
@@ -12,8 +12,8 @@ if (!is_user_logged_in() && isset($_GET['email'])) {
         wp_set_auth_cookie($user->ID, true);
         $_SESSION['logged_in'] = true;
 
-        // Reload to apply cookie+session cleanly
-        wp_redirect(home_url('/profile'));
+        // 🔁 Force refresh without email param
+        wp_redirect(home_url('/payment-success'));
         exit;
     }
 }

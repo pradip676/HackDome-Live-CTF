@@ -140,6 +140,13 @@ get_header();
         </form>
 
         <?php
+        /* Template Name: Register */
+        get_header();
+        ?>
+
+        <!-- Register Form HTML... -->
+
+        <?php
         if (isset($_POST['submit_registration'])) {
             $username = sanitize_user($_POST['username']);
             $email    = sanitize_email($_POST['email']);
@@ -149,17 +156,17 @@ get_header();
                 echo '<p class="error"><i class="fa fa-times-circle"></i> Username or Email already exists.</p>';
             } else {
                 $user_id = wp_create_user($username, $password, $email);
-
                 if (!is_wp_error($user_id)) {
-                    // ✅ Redirect with email in the query string so payment page works
+                    // 🔁 Redirect with email to payment page
                     echo '<script>window.location.href = "' . home_url('/payment') . '?email=' . urlencode($email) . '";</script>';
                     exit;
                 } else {
-                    echo '<p class="error"><i class="fa fa-exclamation-circle"></i> Error creating account. Please try again.</p>';
-                }                
+                    echo '<p class="error">Registration failed. Try again.</p>';
+                }
             }
         }
         ?>
+
 
         <div class="separator">or</div>
         <a href="#" class="google-btn"><i class="fab fa-google"></i> Continue with Google</a>
