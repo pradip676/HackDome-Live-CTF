@@ -100,9 +100,7 @@ function hackdome_filter_ctfs() {
     $category = $_POST['category'];
     $args = array('post_type' => 'ctf_challenge', 'posts_per_page' => -1);
     if ($category != 'all') {
-        $args['meta_query'] = array([
-            'key' => 'ctf_category', 'value' => $category, 'compare' => '='
-        ]);
+        $args['meta_query'] = array([ 'key' => 'ctf_category', 'value' => $category, 'compare' => '=' ]);
     }
     $ctf_query = new WP_Query($args);
     if ($ctf_query->have_posts()) : while ($ctf_query->have_posts()) : $ctf_query->the_post(); ?>
@@ -137,4 +135,10 @@ add_action('init', function () {
         wp_redirect(home_url('/profile'));
         exit;
     }
+});
+
+// ✅ -- Added code for payment after sign up (redirect to /payment)
+add_action('user_register', function($user_id) {
+    wp_redirect(home_url('/payment'));
+    exit;
 });
