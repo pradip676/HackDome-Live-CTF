@@ -136,12 +136,3 @@ add_action('init', function () {
         exit;
     }
 });
-
-// ✅ -- Redirect to /payment after successful registration
-function hackdome_redirect_after_registration($user_id) {
-    if (!is_admin()) {
-        wp_safe_redirect(home_url('/payment'));
-        exit;
-    }
-}
-add_action('user_register', 'hackdome_redirect_after_registration', 100);

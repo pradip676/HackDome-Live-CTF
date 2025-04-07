@@ -39,6 +39,26 @@
         <!-- Dynamic Year -->
         <p>&copy; <?php echo date('Y'); ?> HackDome. All rights reserved.</p>
     </div>
+    <?php if (is_page('register')) : ?>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const signupForm = document.querySelector('form[action*="register"]');
+    
+    if (signupForm) {
+        signupForm.addEventListener('submit', function () {
+            // Delay the redirect to give time for processing
+            setTimeout(() => {
+                // Only redirect if still on /register (meaning registration succeeded and no redirect happened)
+                if (window.location.pathname === '/register/') {
+                    window.location.href = '/payment';
+                }
+            }, 2000); // Wait 2 seconds — adjust as needed
+        });
+    }
+});
+</script>
+<?php endif; ?>
+
 
     <!-- WordPress Footer Hook -->
     <?php wp_footer(); ?>
