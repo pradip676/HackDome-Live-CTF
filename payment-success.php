@@ -1,25 +1,17 @@
 <?php
 /* Template Name: Payment Success */
+session_start();
 
-// Debug mode
-$email = $_GET['email'] ?? '';
-echo '<pre style="color: yellow;">DEBUG: email param = ' . $email . '</pre>';
-
-if (!is_user_logged_in() && !empty($email)) {
-    $sanitized_email = sanitize_email($email);
-    $user = get_user_by('email', $sanitized_email);
+if (!is_user_logged_in() && isset($_GET['email'])) {
+    $email = sanitize_email($_GET['email']);
+    $user = get_user_by('email', $email);
 
     if ($user) {
-        wp_clear_auth_cookie(); // reset session
+        wp_clear_auth_cookie(); // Reset old session
         wp_set_current_user($user->ID);
-        wp_set_auth_cookie($user->ID, true); // "remember me" login
-
-        echo '<pre style="color: lime;">✅ User auto-logged in as: ' . $user->user_login . '</pre>';
-    } else {
-        echo '<pre style="color: red;">❌ No user found with that email</pre>';
+        wp_set_auth_cookie($user->ID, true); // Login w/ remember
+        $_SESSION['logged_in'] = true; // ✅ Session fallback
     }
-} else {
-    echo '<pre style="color: orange;">ℹ️ User already logged in or no email found</pre>';
 }
 
 get_header();

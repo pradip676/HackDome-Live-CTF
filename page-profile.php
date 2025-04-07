@@ -1,9 +1,8 @@
 <?php
 /* Template Name: Profile */
-get_header();
+session_start();
 
-// Start session for fallback check
-if (!is_user_logged_in()) {
+if (!is_user_logged_in() && (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true)) {
     wp_redirect(wp_login_url(home_url('/profile')));
     exit;
 }

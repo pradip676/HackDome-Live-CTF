@@ -14,7 +14,7 @@ if (is_user_logged_in()) {
 // Create dynamic success URL
 $success_url = home_url('/payment-success');
 if (!empty($email)) {
-    $success_url .= '?email=' . urlencode($email);
+    $success_url = home_url('/payment-success') . '?email=' . urlencode($email);
 }
 ?>
 
