@@ -1,154 +1,190 @@
 <?php
-/* Template Name: Challenges */
+/* Template Name: Register */
 get_header();
+?>
 
-// Start session and check user access
-if (!is_user_logged_in()) {
-    wp_redirect(wp_login_url(home_url('/challenges')));
-    exit;
-}
-?
+<style>
+    .register-container {
+        max-width: 500px;
+        margin: 80px auto;
+        background: #1f1f1f;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+        font-family: 'Poppins', sans-serif;
+        color: #fff;
+    }
+    .register-container h2 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        text-align: center;
+        color: #fff;
+    }
+    .register-container p.subtext {
+        text-align: center;
+        color: #ccc;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    .register-container label {
+        font-weight: 500;
+        margin-top: 15px;
+        display: block;
+        color: #eee;
+    }
+    .register-container input[type="text"],
+    .register-container input[type="email"],
+    .register-container input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        border: 1px solid #444;
+        border-radius: 5px;
+        background: #2b2b2b;
+        color: #fff;
+    }
+    .register-container .password-container {
+        position: relative;
+    }
+    .register-container .toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #aaa;
+    }
+    .register-container .error {
+        color: #ff4c4c;
+        font-weight: 500;
+        margin-top: 10px;
+    }
+    .main-button-login, .google-btn {
+        margin-top: 20px;
+        width: 100%;
+        padding: 12px;
+        font-weight: bold;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+    }
+    .main-button-login {
+        background: #ff4c9b;
+        border: none;
+        color: white;
+    }
+    .google-btn {
+        background: white;
+        color: #444;
+        border: 1px solid #ccc;
+    }
+    .register-container .separator {
+        text-align: center;
+        margin: 20px 0;
+        color: #666;
+        position: relative;
+    }
+    .register-container .separator::before,
+    .register-container .separator::after {
+        content: "";
+        height: 1px;
+        width: 45%;
+        background: #333;
+        position: absolute;
+        top: 50%;
+    }
+    .register-container .separator::before {
+        left: 0;
+    }
+    .register-container .separator::after {
+        right: 0;
+    }
+    .register-container .bottom-text {
+        text-align: center;
+        font-size: 12px;
+        margin-top: 20px;
+        color: #ccc;
+    }
+    .register-container .bottom-text a {
+        color: #ff4c9b;
+        text-decoration: underline;
+    }
+</style>
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="page-content">
+<div class="register-container">
+    <h2>Sign Up</h2>
+    <p class="subtext">Join HackDome and upskill in cybersecurity.</p>
 
-                <!-- ***** Featured CTF Challenges ***** -->
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="featured-games header-text">
-                            <div class="heading-section">
-                                <h4><em>Popular</em> Live Boxes</h4>
-                            </div>
-                            <div class="owl-features owl-carousel">
-                                <?php
-                                // Dummy data for featured CTFs (replace with dynamic data from DB if needed)
-                                $featured_ctfs = [
-                                    ['image' => 'redvsblue.webp', 'title' => 'Red Team vs Blue Team', 'desc' => 'Attack & Defend in a real-time simulation.', 'players' => '10/20', 'difficulty' => 'Hard', 'rating' => '4.8/5', 'plays' => '3.5K'],
-                                    ['image' => 'accesdenied.webp', 'title' => 'Web Exploitation Showdown', 'desc' => 'Find and exploit vulnerabilities.', 'players' => '8/15', 'difficulty' => 'Medium', 'rating' => '4.6/5', 'plays' => '2.1K'],
-                                    ['image' => 'forensics.webp', 'title' => 'Forensics Deep Dive', 'desc' => 'Analyze logs and recover hidden data.', 'players' => '5/10', 'difficulty' => 'Hard', 'rating' => '4.7/5', 'plays' => '1.8K'],
-                                ];
+    <?php if (is_user_logged_in()) : ?>
+        <p class="error">You are already logged in. <a href="<?php echo wp_logout_url(home_url()); ?>">Logout</a></p>
+    <?php else : ?>
+        <form action="<?php echo esc_url($_SERVER['REQUEST_URI']); ?>" method="post">
+            <label for="username">Username</label>
+            <input type="text" name="username" placeholder="Username" required>
 
-                                foreach ($featured_ctfs as $ctf) :
-                                ?>
-                                    <div class="item">
-                                        <div class="thumb">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/<?php echo esc_html($ctf['image']); ?>" alt="">
-                                            <div class="hover-effect">
-                                                <h6>Join Box</h6>
-                                            </div>
-                                        </div>
-                                        <h4><?php echo esc_html($ctf['title']); ?><br><span><?php echo esc_html($ctf['desc']); ?></span></h4>
-                                        <span class="stats">
-                                            <i class="fa fa-users"></i> Players: <?php echo esc_html($ctf['players']); ?> <br>
-                                            <i class="fa fa-tachometer-alt"></i> Difficulty: <?php echo esc_html($ctf['difficulty']); ?> <br>
-                                            <i class="fa fa-star"></i> <?php echo esc_html($ctf['rating']); ?> <br>
-                                            <i class="fa fa-gamepad"></i> <?php echo esc_html($ctf['plays']); ?> Times
-                                        </span>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                    </div>
+            <label for="email">Email Address</label>
+            <input type="email" name="email" placeholder="example@example.com" required>
 
-                    <!-- ***** CTF Leaderboard ***** -->
-                    <div class="col-lg-4">
-                        <div class="top-streamers">
-                            <div class="heading-section">
-                                <h4><em>CTF</em> Leaderboard</h4>
-                            </div>
-                            <ul>
-                                <?php
-                                // Dummy leaderboard data
-                                $leaderboard = [
-                                    ['rank' => '01', 'name' => 'BishopX', 'score' => '2250', 'color' => 'gold'],
-                                    ['rank' => '02', 'name' => 'ShadowRoot', 'score' => '1980', 'color' => 'silver'],
-                                    ['rank' => '03', 'name' => 'CryptoPhantom', 'score' => '1850', 'color' => 'bronze'],
-                                ];
-
-                                foreach ($leaderboard as $player) :
-                                ?>
-                                    <li>
-                                        <span><?php echo esc_html($player['rank']); ?></span>
-                                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/avatar-0<?php echo esc_html($player['rank']); ?>.jpg" alt="" style="max-width: 46px; border-radius: 50%; margin-right: 15px;">
-                                        <h6><i class="fa fa-trophy" style="color: <?php echo esc_html($player['color']); ?>;"></i> <?php echo esc_html($player['name']); ?></h6>
-                                        <div class="main-button">
-                                            <a href="#"><?php echo esc_html($player['score']); ?> Pts</a>
-                                        </div>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                            <div class="see-more">
-                                <a href="<?php echo esc_url(home_url('/leaderboard')); ?>">See More</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ***** Ongoing CTFs with Filters ***** -->
-                <div class="live-stream">
-                    <div class="col-lg-12">
-                        <div class="heading-section">
-                            <h4><em>Ongoing</em> Live CTFs</h4>
-                        </div>
-
-                        <!-- CTF Filters -->
-                        <div class="ctf-filter">
-                            <div class="filter-buttons">
-                                <button class="filter-btn active" data-category="all">All</button>
-                                <button class="filter-btn" data-category="offensive">Offensive</button>
-                                <button class="filter-btn" data-category="defensive">Defensive</button>
-                                <button class="filter-btn" data-category="forensics">Forensics</button>
-                                <button class="filter-btn" data-category="crypto">Cryptography</button>
-                                <button class="filter-btn" data-category="osint">OSINT</button>
-                            </div>
-                        </div>
-
-                        <!-- CTF Items -->
-                        <div class="row">
-                            <?php
-                            // Dummy ongoing CTFs
-                            $ongoing_ctfs = [
-                                ['image' => 'stream-08.jpg', 'title' => 'OSINT Recon Hunt', 'category' => 'osint', 'players' => '8/15', 'difficulty' => 'Medium', 'rating' => '4.6/5'],
-                                ['image' => 'stream-08.jpg', 'title' => 'Cryptography Decryption War', 'category' => 'crypto', 'players' => '7/14', 'difficulty' => 'Hard', 'rating' => '4.7/5'],
-                                ['image' => 'stream-08.jpg', 'title' => 'Forensics Deep Dive', 'category' => 'forensics', 'players' => '5/10', 'difficulty' => 'Medium', 'rating' => '4.5/5'],
-                            ];
-
-                            foreach ($ongoing_ctfs as $ctf) :
-                            ?>
-                                <div class="col-lg-3 col-sm-6 ctf-item" data-category="<?php echo esc_attr($ctf['category']); ?>">
-                                    <div class="item">
-                                        <div class="thumb">
-                                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/<?php echo esc_html($ctf['image']); ?>" alt="">
-                                            <div class="hover-effect">
-                                                <div class="content">
-                                                    <div class="live"><a href="#">Live</a></div>
-                                                    <ul>
-                                                        <li><a href="#"><i class="fa-solid fa-right-to-bracket"></i> Join Box </a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h4><?php echo esc_html($ctf['title']); ?><br><span>Find and exploit vulnerabilities in a live website.</span></h4>
-                                        <div class="stats">
-                                            <li>
-                                                <i class="fa fa-users"></i> Players: <?php echo esc_html($ctf['players']); ?> <br>
-                                                <i class="fa fa-tachometer-alt"></i> Difficulty: <?php echo esc_html($ctf['difficulty']); ?> <br>
-                                                <i class="fa fa-star"></i> <?php echo esc_html($ctf['rating']); ?>
-                                            </li>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-
-                    </div>
-                </div>
-
+            <label for="password">Password</label>
+            <div class="password-container">
+                <input type="password" name="password" id="password" placeholder="Password" required>
+                <span class="toggle-password" onclick="togglePasswordVisibility()">
+                    <i class="fa fa-eye" id="toggleIcon"></i>
+                </span>
             </div>
-        </div>
+
+            <button type="submit" name="submit_registration" class="main-button-login">Sign Up</button>
+        </form>
+
+        <?php
+        if (isset($_POST['submit_registration'])) {
+            $username = sanitize_user($_POST['username']);
+            $email    = sanitize_email($_POST['email']);
+            $password = $_POST['password'];
+
+            if (username_exists($username) || email_exists($email)) {
+                echo '<p class="error"><i class="fa fa-times-circle"></i> Username or Email already exists.</p>';
+            } else {
+                $user_id = wp_create_user($username, $password, $email);
+
+                if (!is_wp_error($user_id)) {
+                    // ✅ Redirect to payment page with email param so payment-success can auto-login
+                    $payment_url = home_url('/payment') . '?email=' . urlencode($email);
+                    echo '<script>window.location.href = "' . $payment_url . '";</script>';
+                    exit;
+                } else {
+                    echo '<p class="error"><i class="fa fa-exclamation-circle"></i> Error creating account. Please try again.</p>';
+                }
+            }
+        }
+        ?>
+
+        <div class="separator">or</div>
+        <a href="#" class="google-btn"><i class="fab fa-google"></i> Continue with Google</a>
+    <?php endif; ?>
+
+    <div class="bottom-text">
+        By signing up, you agree to our <a href="#">Terms and Conditions</a>. Already have an account? <a href="<?php echo home_url('/login'); ?>">Log in</a>.
     </div>
 </div>
+
+<script>
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById('password');
+        const toggleIcon = document.getElementById('toggleIcon');
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordField.type = 'password';
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    }
+</script>
 
 <?php get_footer(); ?>
