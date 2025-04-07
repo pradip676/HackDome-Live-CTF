@@ -3,10 +3,7 @@
 get_header();
 
 // Start session for fallback check
-session_start();
-
-// Allow access if logged into WordPress OR manually via session
-if (!is_user_logged_in() && (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true)) {
+if (!is_user_logged_in()) {
     wp_redirect(wp_login_url(home_url('/profile')));
     exit;
 }
