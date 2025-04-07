@@ -2,6 +2,9 @@
 /* Template Name: Payment Success */
 session_start();
 
+$redirect_needed = false;
+
+// Auto-login user via email param
 if (isset($_GET['email'])) {
     $email = sanitize_email($_GET['email']);
     $user = get_user_by('email', $email);
@@ -10,7 +13,17 @@ if (isset($_GET['email'])) {
         wp_set_current_user($user->ID);
         wp_set_auth_cookie($user->ID);
         $_SESSION['logged_in'] = true;
+
+        // Trigger redirect to refresh the WordPress session/cookies
+        $redirect_needed = true;
     }
+}
+
+// 🔁 Force refresh to apply login (only once)
+if ($redirect_needed && !isset($_SESSION['redirect_done'])) {
+    $_SESSION['redirect_done'] = true;
+    wp_redirect(home_url('/payment-success'));
+    exit;
 }
 
 get_header();
