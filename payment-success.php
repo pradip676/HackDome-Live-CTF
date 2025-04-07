@@ -1,27 +1,35 @@
 <?php
 /* Template Name: Payment Success */
+
 get_header();
 
-// STEP 1: Auto-login based on email
+// Auto-login once using the email param
 if (isset($_GET['email'])) {
     $email = sanitize_email($_GET['email']);
     $user = get_user_by('email', $email);
 
     if ($user) {
-        // Log in the user
-        wp_set_current_user($user->ID);
-        wp_set_auth_cookie($user->ID, true, false); // Persistent login
+        // Only log in if not already
+        if (!is_user_logged_in()) {
+            wp_set_auth_cookie($user->ID, true); // "true" = persistent cookie
+            wp_set_current_user($user->ID);
+        }
 
-        // ✅ Redirect to same page without query params to refresh session
-        wp_safe_redirect(home_url('/payment-success'));
-        exit;
+        // Redirect to clear the query string and refresh session
+        if (!isset($_GET['redirected'])) {
+            wp_redirect(add_query_arg('redirected', '1', home_url('/payment-success')));
+            exit;
+        }
     } else {
-        $error = "❌ Unable to log you in. Please log in manually.";
+        echo '<div class="terminal-container"><p class="terminal-text error">❌ Email not found. Please log in manually.</p></div>';
+        get_footer();
+        exit;
     }
+} elseif (!is_user_logged_in()) {
+    echo '<div class="terminal-container"><p class="terminal-text error">⚠️ Unable to detect login. Please <a href="' . wp_login_url() . '">log in manually</a>.</p></div>';
+    get_footer();
+    exit;
 }
-
-// STEP 2: Check if user is now logged in
-$is_logged_in = is_user_logged_in();
 ?>
 
 <canvas id="matrixRain"></canvas>
