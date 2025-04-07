@@ -2,11 +2,15 @@
 /* Template Name: Profile */
 get_header();
 
-// Get Current Logged-in User
-if (!is_user_logged_in()) {
+// Start session for fallback check
+session_start();
+
+// Allow access if logged into WordPress OR manually via session
+if (!is_user_logged_in() && (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true)) {
     wp_redirect(wp_login_url(home_url('/profile')));
     exit;
 }
+
 $current_user = wp_get_current_user();
 ?>
 

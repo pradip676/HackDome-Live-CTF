@@ -1,5 +1,17 @@
 <?php
 /* Template Name: Payment Success */
+
+// Start the session
+session_start();
+
+// OPTIONAL: Assuming you have access to user information after payment
+// Set the session as logged in — you can also store user info like email or ID if available
+$_SESSION['logged_in'] = true;
+
+// If you know user ID or email from payment processing, set it like this:
+// $_SESSION['user_id'] = $user_id; 
+// $_SESSION['email'] = $user_email;
+
 get_header();
 ?>
 

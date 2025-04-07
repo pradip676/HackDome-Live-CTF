@@ -1,7 +1,15 @@
 <?php
 /* Template Name: Challenges */
 get_header();
-?>
+
+// Start session and check user access
+session_start();
+
+if (!is_user_logged_in() && (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true)) {
+    wp_redirect(wp_login_url(home_url('/challenges')));
+    exit;
+}
+?
 
 <div class="container">
     <div class="row">
