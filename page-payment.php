@@ -14,13 +14,19 @@ get_header();
     <div class="terminal-body">
 
         <?php if (is_user_logged_in()) : ?>
+            <?php
+            // Get current logged-in user
+            $current_user = wp_get_current_user();
+            $user_email = urlencode($current_user->user_email);
+            ?>
+
             <div class="logo-container">
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="HackDome Logo" class="logo">
             </div>
 
             <p class="terminal-text">[+] Please complete your payment to activate your HackDome access.</p>
 
-            <!-- ✅ Stripe Payment Integration -->
+            <!-- ✅ Stripe Payment Integration with dynamic success_url -->
             <div class="payment-section">
                 <?php 
                 echo do_shortcode('[accept_stripe_payment 
@@ -29,7 +35,7 @@ get_header();
                     currency="USD" 
                     description="Monthly HackDome Subscription" 
                     button_text="Complete Payment" 
-                    success_url="' . home_url('/payment-success') . '" 
+                    success_url="' . home_url('/payment-success') . '?email=' . $user_email . '" 
                     cancel_url="' . home_url('/payment-failed') . '"
                     class="custom-stripe-button"]'); 
                 ?>
