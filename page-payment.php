@@ -1,6 +1,21 @@
 <?php
 /* Template Name: Payment */
 get_header();
+
+// Determine the user's email (either from logged in user or GET param)
+$email = '';
+if (is_user_logged_in()) {
+    $current_user = wp_get_current_user();
+    $email = $current_user->user_email;
+} elseif (isset($_GET['email'])) {
+    $email = sanitize_email($_GET['email']);
+}
+
+// Create dynamic success URL
+$success_url = home_url('/payment-success');
+if (!empty($email)) {
+    $success_url .= '?email=' . urlencode($email);
+}
 ?>
 
 <!-- MATRIX RAIN BACKGROUND -->
@@ -13,21 +28,14 @@ get_header();
     </div>
     <div class="terminal-body">
 
-        <?php if (is_user_logged_in()) : ?>
-            <?php
-            // Get current logged-in user
-            $current_user = wp_get_current_user();
-            $user_email = urlencode($current_user->user_email);
-            $success_url = home_url('/payment-success') . '?email=' . $user_email;
-            ?>
-
+        <?php if (!empty($email)) : ?>
             <div class="logo-container">
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="HackDome Logo" class="logo">
             </div>
 
             <p class="terminal-text">[+] Please complete your payment to activate your HackDome access.</p>
 
-            <!-- ✅ Stripe Payment Integration with dynamic success_url -->
+            <!-- ✅ Stripe Payment Integration -->
             <div class="payment-section">
                 <?php 
                 echo do_shortcode('[accept_stripe_payment 
@@ -36,16 +44,15 @@ get_header();
                     currency="USD" 
                     description="Monthly HackDome Subscription" 
                     button_text="Complete Payment" 
-                    success_url="' . $success_url . '" 
+                    success_url="' . esc_url($success_url) . '" 
                     cancel_url="' . home_url('/payment-failed') . '"
                     class="custom-stripe-button"]'); 
                 ?> 
             </div>
-
         <?php else : ?>
             <p class="terminal-text error">
-                <i class="fa fa-times-circle"></i> You must be logged in to complete payment. 
-                <a href="<?php echo wp_login_url(home_url('/payment')); ?>">Log in here</a>.
+                <i class="fa fa-times-circle"></i> Unable to process payment. Email not found.
+                <a href="<?php echo home_url('/register'); ?>">Go back to Sign Up</a>.
             </p>
         <?php endif; ?>
 
