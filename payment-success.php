@@ -19,10 +19,10 @@ if (isset($_GET['email'])) {
     }
 }
 
-// 🔁 Force refresh to apply login (only once)
+// ✅ 3. Force refresh, but KEEP email in URL
 if ($redirect_needed && !isset($_SESSION['redirect_done'])) {
     $_SESSION['redirect_done'] = true;
-    wp_redirect(home_url('/payment-success'));
+    wp_redirect(home_url('/payment-success') . '?email=' . urlencode($email)); // ✅ fixed here
     exit;
 }
 
